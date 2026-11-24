@@ -62,28 +62,28 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
   };
 
   const getFileIcon = (mimeType: string, isFolder?: boolean) => {
-    if (isFolder) return <Folder className="w-5 h-5 text-amber-400" />;
-    if (mimeType.includes('pdf')) return <FileText className="w-5 h-5 text-rose-400" />;
+    if (isFolder) return <Folder className="w-5 h-5 text-white" />;
+    if (mimeType.includes('pdf')) return <FileText className="w-5 h-5 text-white" />;
     if (mimeType.includes('sheet') || mimeType.includes('csv') || mimeType.includes('excel'))
-      return <FileSpreadsheet className="w-5 h-5 text-emerald-400" />;
-    if (mimeType.includes('image')) return <FileImage className="w-5 h-5 text-sky-400" />;
+      return <FileSpreadsheet className="w-5 h-5 text-white" />;
+    if (mimeType.includes('image')) return <FileImage className="w-5 h-5 text-white" />;
     if (mimeType.includes('word') || mimeType.includes('document'))
-      return <FileText className="w-5 h-5 text-blue-400" />;
-    return <File className="w-5 h-5 text-slate-400" />;
+      return <FileText className="w-5 h-5 text-white" />;
+    return <File className="w-5 h-5 text-white" />;
   };
 
   return (
-    <div className="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-5 shadow-lg flex flex-col h-full">
+    <div className="bg-zinc-950 rounded-xl p-5 flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-700/60">
+      <div className="flex items-center justify-between pb-4">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-              <FolderOpen className="w-5 h-5 text-emerald-400" />
+              <FolderOpen className="w-5 h-5 text-white" />
               Arquivos de Origem (Google Drive)
             </h2>
             {isDemoMode && (
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
                 Demo
               </span>
             )}
@@ -93,10 +93,10 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
           </p>
         </div>
 
+        {/* Actions bar: Upload & Refresh */}
         <div className="flex items-center gap-2">
-          {/* Upload file for testing */}
-          <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700/70 hover:bg-slate-700 text-slate-200 border border-slate-600/70 transition-all">
-            <Upload className="w-3.5 h-3.5 text-emerald-400" />
+          <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition-colors">
+            <Upload className="w-3.5 h-3.5 text-white" />
             <span>{uploading ? 'Enviando...' : 'Adicionar Arquivo'}</span>
             <input
               type="file"
@@ -105,12 +105,10 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
               disabled={uploading}
             />
           </label>
-
-          {/* Refresh */}
           <button
             onClick={onRefresh}
             disabled={loading}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
+            className="p-1.5 rounded-lg text-white hover:bg-zinc-800 transition-colors cursor-pointer"
             title="Atualizar lista de arquivos"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -118,8 +116,8 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
         </div>
       </div>
 
-      {/* Search & Selection Controls */}
-      <div className="pt-3 pb-2 flex items-center justify-between gap-3">
+      {/* Search & Selection Controls Card */}
+      <div className="pt-2 pb-2 flex items-center justify-between gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
@@ -127,28 +125,31 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
             placeholder="Buscar arquivos de origem..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900/80 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="w-full bg-black rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
 
-        <button
-          onClick={allSelected ? onDeselectAll : onSelectAll}
-          className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1.5 px-2 py-1 rounded bg-slate-900/50 border border-slate-700/60"
-        >
-          {allSelected ? <CheckSquare className="w-3.5 h-3.5 text-emerald-400" /> : <Square className="w-3.5 h-3.5" />}
-          {allSelected ? 'Desmarcar' : 'Selecionar Todos'}
-        </button>
+        <label className="inline-flex items-center gap-1.5 text-xs text-white cursor-pointer select-none bg-zinc-900 px-3 py-1.5 rounded-lg transition-colors" title="Selecionar ou desmarcar todos os arquivos filtrados">
+          <input
+            type="checkbox"
+            checked={allSelected}
+            onChange={() => (allSelected ? onDeselectAll() : onSelectAll())}
+            className="h-3.5 w-3.5 text-emerald-500 bg-slate-800 rounded cursor-pointer accent-emerald-500"
+            aria-label="Selecionar todos os arquivos filtrados"
+          />
+          <span>{allSelected ? 'Desmarcar Todos' : 'Selecionar Todos'}</span>
+        </label>
       </div>
 
       {/* Files List */}
-      <div className="flex-1 overflow-y-auto mt-2 space-y-2 pr-1 max-h-[420px]">
+      <div className="flex-1 overflow-y-auto mt-2 space-y-1.5 pr-1 max-h-[420px]">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
             <RefreshCw className="w-6 h-6 animate-spin text-emerald-400 mb-2" />
             <p className="text-xs">Carregando arquivos do Google Drive...</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-14 text-slate-400 border border-dashed border-slate-700/70 rounded-xl">
+          <div className="text-center py-14 text-slate-400 bg-slate-950/40 rounded-xl">
             <FolderOpen className="w-8 h-8 mx-auto text-slate-500 mb-2" />
             <p className="text-xs font-medium text-slate-300">Nenhum arquivo encontrado</p>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -161,10 +162,10 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
             return (
               <div
                 key={file.id}
-                className={`group flex items-center justify-between p-3 rounded-xl border transition-all ${
+                className={`group flex items-center justify-between p-3 rounded-xl transition-all ${
                   isSelected
-                    ? 'bg-emerald-950/20 border-emerald-500/40 shadow-sm'
-                    : 'bg-slate-900/60 border-slate-800/80 hover:border-slate-700'
+                    ? 'bg-emerald-950/30'
+                    : 'bg-black hover:bg-zinc-900'
                 }`}
               >
                 <div className="flex items-center space-x-3 min-w-0 flex-1">
@@ -202,7 +203,7 @@ export const DriveFilesList: React.FC<DriveFilesListProps> = ({
                 <div className="ml-3 flex-shrink-0">
                   <button
                     onClick={() => onMigrateSingle(file)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 transition-all opacity-90 group-hover:opacity-100"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition-all"
                     title={`Migrar ${file.name} para Azure Blob`}
                   >
                     <span>Migrar</span>

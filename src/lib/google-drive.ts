@@ -91,7 +91,7 @@ export function isGoogleDriveConfigured(): boolean {
 /**
  * Função para listar os dados de origem (google drive)
  */
-export async function listSourceFiles(customFolderId?: string): Promise<{ files: DriveFile[]; isDemo: boolean }> {
+export async function listSourceFiles(customFolderId?: string): Promise<{ files: DriveFile[]; isDemo: boolean; error?: string }> {
   const folderId = customFolderId || process.env.GOOGLE_DRIVE_FOLDER_ID;
   const drive = getGoogleDriveClient();
 
@@ -104,6 +104,17 @@ export async function listSourceFiles(customFolderId?: string): Promise<{ files:
   }
 
   try {
+    if (folderId) {
+      const folder = await drive.files.get({
+        fileId: folderId,
+        fields: 'id,name,mimeType',
+      });
+
+      if (folder.data.mimeType !== 'application/vnd.google-apps.folder') {
+        throw new Error('GOOGLE_DRIVE_FOLDER_ID não corresponde a uma pasta do Google Drive.');
+      }
+    }
+
     let query = "trashed = false";
     if (folderId) {
       query += ` and '${folderId}' in parents`;
@@ -113,6 +124,7 @@ export async function listSourceFiles(customFolderId?: string): Promise<{ files:
       q: query,
       fields: 'files(id, name, mimeType, size, modifiedTime, webViewLink, iconLink)',
       pageSize: 100,
+      orderBy: 'modifiedTime desc',
     });
 
     const items = response.data.files || [];
@@ -134,10 +146,16 @@ export async function listSourceFiles(customFolderId?: string): Promise<{ files:
     return { files, isDemo: false };
   } catch (error: any) {
     console.error('[GOOGLE DRIVE] Erro ao listar arquivos:', error.message || error);
-    // Em caso de erro na API do Google, disponibiliza fallback para demonstração
+    const code = error?.response?.status ?? error?.code;
+    const message =
+      code === 404 || code === '404'
+        ? `Pasta do Google Drive não encontrada ou não compartilhada com a Service Account (ID: ${folderId}).`
+        : error.message || 'Erro ao conectar ao Google Drive.';
+
     return {
-      files: demoFiles.map(({ content, ...f }) => f),
-      isDemo: true,
+      files: [],
+      isDemo: false,
+      error: message,
     };
   }
 }
@@ -251,13 +269,14 @@ export async function testGoogleDriveConnection(folderId?: string) {
   }
 
   try {
-    const { files, isDemo } = await listSourceFiles(folderId);
+    const { files, isDemo, error } = await listSourceFiles(folderId);
     return {
-      connected: !isDemo,
+      connected: !isDemo && !error,
       configured: true,
       isDemoMode: isDemo,
       fileCount: files.length,
       folderId: folderId || process.env.GOOGLE_DRIVE_FOLDER_ID,
+      error,
     };
   } catch (error: any) {
     return {

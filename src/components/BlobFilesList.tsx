@@ -50,24 +50,24 @@ export const BlobFilesList: React.FC<BlobFilesListProps> = ({
   const getFileIcon = (contentType?: string, name?: string) => {
     const ext = name?.split('.').pop()?.toLowerCase() || '';
     if (contentType?.includes('pdf') || ext === 'pdf')
-      return <FileText className="w-5 h-5 text-rose-400" />;
+      return <FileText className="w-5 h-5 text-white" />;
     if (contentType?.includes('sheet') || contentType?.includes('csv') || ext === 'xlsx' || ext === 'csv')
-      return <FileSpreadsheet className="w-5 h-5 text-emerald-400" />;
+      return <FileSpreadsheet className="w-5 h-5 text-white" />;
     if (contentType?.includes('image') || ['png', 'jpg', 'jpeg', 'svg', 'webp'].includes(ext))
-      return <FileImage className="w-5 h-5 text-sky-400" />;
+      return <FileImage className="w-5 h-5 text-white" />;
     if (contentType?.includes('word') || ext === 'docx')
-      return <FileText className="w-5 h-5 text-blue-400" />;
-    return <File className="w-5 h-5 text-slate-400" />;
+      return <FileText className="w-5 h-5 text-white" />;
+    return <File className="w-5 h-5 text-white" />;
   };
 
   return (
-    <div className="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-5 shadow-lg flex flex-col h-full">
+    <div className="bg-zinc-950 rounded-xl p-5 flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-700/60">
+      <div className="flex items-center justify-between pb-4">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-              <Cloud className="w-5 h-5 text-sky-400" />
+              <Cloud className="w-5 h-5 text-white" />
               Arquivos de Destino (Azure Blob Storage)
             </h2>
           </div>
@@ -81,7 +81,7 @@ export const BlobFilesList: React.FC<BlobFilesListProps> = ({
         <button
           onClick={onRefresh}
           disabled={loading}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
+          className="p-1.5 rounded-lg text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           title="Atualizar lista de blobs"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -89,7 +89,7 @@ export const BlobFilesList: React.FC<BlobFilesListProps> = ({
       </div>
 
       {/* Search */}
-      <div className="pt-3 pb-2">
+      <div className="pt-2 pb-2">
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
@@ -97,20 +97,20 @@ export const BlobFilesList: React.FC<BlobFilesListProps> = ({
             placeholder="Buscar arquivos no Azure Blob..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900/80 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+            className="w-full bg-black rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
       </div>
 
       {/* Blobs List */}
-      <div className="flex-1 overflow-y-auto mt-2 space-y-2 pr-1 max-h-[420px]">
+      <div className="flex-1 overflow-y-auto mt-2 space-y-1.5 pr-1 max-h-[420px]">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
             <RefreshCw className="w-6 h-6 animate-spin text-sky-400 mb-2" />
             <p className="text-xs">Consultando contêiner Azure Blob Storage...</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-14 text-slate-400 border border-dashed border-slate-700/70 rounded-xl">
+          <div className="text-center py-14 text-slate-400 bg-slate-950/40 rounded-xl">
             <Cloud className="w-8 h-8 mx-auto text-slate-500 mb-2" />
             <p className="text-xs font-medium text-slate-300">Contêiner vazio</p>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -121,7 +121,7 @@ export const BlobFilesList: React.FC<BlobFilesListProps> = ({
           filtered.map((blob) => (
             <div
               key={blob.name}
-              className="group flex items-center justify-between p-3 rounded-xl border bg-slate-900/60 border-slate-800/80 hover:border-slate-700 transition-all"
+              className="group flex items-center justify-between p-3 rounded-xl bg-black hover:bg-zinc-900 transition-all"
             >
               <div className="flex items-center space-x-3 min-w-0 flex-1">
                 <div className="flex-shrink-0">
@@ -163,7 +163,7 @@ export const BlobFilesList: React.FC<BlobFilesListProps> = ({
                 <button
                   onClick={() => handleDelete(blob.name)}
                   disabled={deletingBlob === blob.name}
-                  className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                   title="Excluir Blob"
                 >
                   <Trash2 className={`w-4 h-4 ${deletingBlob === blob.name ? 'animate-spin' : ''}`} />

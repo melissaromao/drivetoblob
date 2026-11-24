@@ -47,17 +47,17 @@ export const MigrationConsole: React.FC<MigrationConsoleProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden mt-6">
+    <div className="bg-zinc-950 rounded-xl overflow-hidden mt-6">
       {/* Console Header */}
-      <div className="bg-slate-950/80 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+      <div className="bg-black px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="flex space-x-1.5">
-            <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
-            <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
-            <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
           </div>
           <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-            <Terminal className="w-4 h-4 text-indigo-400" />
+            <Terminal className="w-4 h-4 text-white" />
             <span>Console de Migração em Tempo Real (Status de Transferência)</span>
             {isMigrating && (
               <span className="flex items-center gap-1.5 text-xs text-amber-400 font-semibold animate-pulse ml-2">
@@ -71,10 +71,10 @@ export const MigrationConsole: React.FC<MigrationConsoleProps> = ({
         {/* Console Stats & Actions */}
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2 text-xs font-mono">
-            <span className="flex items-center gap-1 text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/50">
+            <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
               <CheckCircle2 className="w-3 h-3" /> {successCount}
             </span>
-            <span className="flex items-center gap-1 text-rose-400 bg-rose-950/40 px-2 py-0.5 rounded border border-rose-900/50">
+            <span className="flex items-center gap-1 text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">
               <XCircle className="w-3 h-3" /> {errorCount}
             </span>
           </div>
@@ -84,7 +84,7 @@ export const MigrationConsole: React.FC<MigrationConsoleProps> = ({
           <button
             onClick={handleCopyLogs}
             disabled={logs.length === 0}
-            className="text-xs text-slate-400 hover:text-slate-200 transition-colors p-1"
+            className="text-xs text-slate-400 hover:text-slate-200 transition-colors p-1 cursor-pointer"
             title="Copiar logs"
           >
             <Copy className="w-3.5 h-3.5" />
@@ -92,7 +92,7 @@ export const MigrationConsole: React.FC<MigrationConsoleProps> = ({
           <button
             onClick={onClearLogs}
             disabled={logs.length === 0}
-            className="text-xs text-slate-400 hover:text-rose-400 transition-colors p-1"
+            className="text-xs text-slate-400 hover:text-rose-400 transition-colors p-1 cursor-pointer"
             title="Limpar console"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export const MigrationConsole: React.FC<MigrationConsoleProps> = ({
       </div>
 
       {/* Terminal Body */}
-      <div className="p-4 font-mono text-xs overflow-y-auto max-h-64 min-h-36 bg-slate-950/90 space-y-1">
+      <div className="p-4 font-mono text-xs overflow-y-auto max-h-64 min-h-36 bg-black space-y-1">
         {logs.length === 0 ? (
           <div className="text-slate-600 italic py-6 text-center">
             Aguardando início de transferência. Os status detalhados de sucesso/erro de cada arquivo aparecerão aqui e no terminal do servidor.

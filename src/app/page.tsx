@@ -39,7 +39,9 @@ export default function Home() {
   const loadDriveFiles = useCallback(async () => {
     setLoadingDrive(true);
     try {
-      const res = await fetch('/api/drive/files');
+      const res = await fetch(`/api/drive/files?t=${Date.now()}`, {
+        cache: 'no-store',
+      });
       const data = await res.json();
       if (data.success) {
         setDriveFiles(data.files || []);
@@ -211,7 +213,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-black text-white flex flex-col font-sans selection:bg-blue-500/30 selection:text-white">
       {/* Header */}
       <Header
         selectedCount={selectedIds.length}
@@ -235,20 +237,20 @@ export default function Home() {
         />
 
         {/* Quick Summary Pill Bar */}
-        <div className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="bg-zinc-950 rounded-xl p-3 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-4 text-slate-400">
             <span className="flex items-center gap-1.5">
-              <HardDrive className="w-3.5 h-3.5 text-emerald-400" />
+              <HardDrive className="w-3.5 h-3.5 text-white" />
               Origem: <strong className="text-slate-200">{driveFiles.length} arquivos</strong>
             </span>
             <span>•</span>
             <span className="flex items-center gap-1.5">
-              <Cloud className="w-3.5 h-3.5 text-sky-400" />
+              <Cloud className="w-3.5 h-3.5 text-white" />
               Destino: <strong className="text-slate-200">{blobFiles.length} blobs</strong>
             </span>
             <span>•</span>
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <Sparkles className="w-3.5 h-3.5 text-white" />
               Selecionados: <strong className="text-slate-200">{selectedIds.length}</strong>
             </span>
           </div>
@@ -299,7 +301,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 py-4 text-center text-xs text-slate-500">
+      <footer className="bg-black py-4 text-center text-xs text-zinc-500">
         <p>
           DriveToBlob Migration Hub • Projeto de Migração de Dados em Nuvem (Google Drive ➔ Azure Blob Storage)
         </p>
